@@ -3,7 +3,7 @@ import path from 'path'
 import config from 'config'
 
 const app = express()
-const examplesPath = path.resolve(__dirname, '..', 'examples')
+const examplesPath = path.resolve(__dirname, '..', '..', 'examples')
 
 app.use(express.static(examplesPath))
 

@@ -4,7 +4,7 @@ interface HeatmapData {
   value: number
 }
 
-class Heatmap {
+export class Heatmap {
   protected data: HeatmapData[]
   protected el: HTMLCanvasElement
 
