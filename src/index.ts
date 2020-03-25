@@ -1,1 +1,2 @@
-export { Heatmap } from './heatmap'
+import Heatmap from './heatmap'
+export default Heatmap
