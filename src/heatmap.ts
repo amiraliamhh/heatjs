@@ -23,12 +23,16 @@ class Heatmap {
   }
 
   public drawHeatPoint(x: number, y: number) {
-    const { rgb } = calcRGB(765)
-    console.log(rgb)
-    this.drawCircle(x, y, 10, { color: rgb })
-    this.drawCircle(100, y, 10, { color: 'rgb(0,255,0)' })
-    this.drawCircle(150, y, 10, { color: 'rgb(0,0,255)' })
-    this.drawCircle(200, y, 10, { color: 'rgb(0,255,100)' })
+    const { rgb: darkBlue } = calcRGB(100)
+    const { rgb: lightBlue } = calcRGB(410)
+    const { rgb: green } = calcRGB(710)
+    const { rgb: yellow } = calcRGB(770)
+    const { rgb: red } = calcRGB(1020)
+    this.drawCircle(x, y, 26, { color: darkBlue, blurSize: '3px' })
+    this.drawCircle(x, y, 22, { color: lightBlue, blurSize: '1px' })
+    this.drawCircle(x, y, 18, { color: green, blurSize: '1px' })
+    this.drawCircle(x, y, 16, { color: yellow, blurSize: '1px' })
+    this.drawCircle(x, y, 4, { color: red, blurSize: '2px' })
   }
 
   protected drawCircle(
