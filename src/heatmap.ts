@@ -1,3 +1,5 @@
+import { calcRGB } from './color'
+
 interface HeatmapData {
   x: number
   y: number
@@ -21,7 +23,12 @@ class Heatmap {
   }
 
   public drawHeatPoint(x: number, y: number) {
-    this.drawCircle(x, y, 40, { color: 'rgb(255,0,0)' })
+    const { rgb } = calcRGB(765)
+    console.log(rgb)
+    this.drawCircle(x, y, 10, { color: rgb })
+    this.drawCircle(100, y, 10, { color: 'rgb(0,255,0)' })
+    this.drawCircle(150, y, 10, { color: 'rgb(0,0,255)' })
+    this.drawCircle(200, y, 10, { color: 'rgb(0,255,100)' })
   }
 
   protected drawCircle(
