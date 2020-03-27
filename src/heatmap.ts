@@ -72,6 +72,13 @@ class Heatmap {
       blurSize: '2px'
     }
   })
+  protected readonly defaultLayers = [
+    'red',
+    'yellow',
+    'green',
+    'lightBlue',
+    'darkBlue'
+  ]
 
   protected data: HeatmapData[]
   protected el: HTMLCanvasElement
@@ -95,17 +102,14 @@ class Heatmap {
     })
   }
 
-  public drawHeatPoint(x: number, y: number) {
-    const { rgba: darkBlue } = calcRGB(100)
-    const { rgba: lightBlue } = calcRGB(410)
-    const { rgba: green } = calcRGB(710)
-    const { rgba: yellow } = calcRGB(770)
-    const { rgba: red } = calcRGB(1020)
-    this.drawCircle(x, y, 26, { color: darkBlue, blurSize: '3px' })
-    this.drawCircle(x, y, 22, { color: lightBlue, blurSize: '1px' })
-    this.drawCircle(x, y, 18, { color: green, blurSize: '1px' })
-    this.drawCircle(x, y, 16, { color: yellow, blurSize: '1px' })
-    this.drawCircle(x, y, 4, { color: red, blurSize: '2px' })
+  public drawHeatmap(
+    layers: number = 5
+  ) {
+    for (let i = layers; i > 0; i--) {
+      this.data.forEach(({ x, y }) => {
+        this.drawPoint([{ x, y }], this.defaultLayers[i - 1] as colors)
+      })
+    }
   }
 
   protected drawCircle(
@@ -125,7 +129,7 @@ class Heatmap {
     this.ctx.closePath()
   }
 
-  private drawPoints(data: HeatmapData[], colorName: colors, opacity = 1) {
+  private drawPoint(data: HeatmapData[], colorName: colors, opacity = 1) {
     const { size, color } = this.defaultSizes[colorName]
     data.forEach(({ x, y }) => {
       this.drawCircle(x, y, size, {
