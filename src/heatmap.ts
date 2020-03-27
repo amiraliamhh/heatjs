@@ -62,9 +62,9 @@ class Heatmap {
       blurSize: '1px'
     },
     yellow: {
-      size: 16,
+      size: 15,
       color: 770,
-      blurSize: '1px'
+      blurSize: '3px'
     },
     red: {
       size: 4,
@@ -107,7 +107,7 @@ class Heatmap {
   ) {
     for (let i = layers; i > 0; i--) {
       this.data.forEach(({ x, y }) => {
-        this.drawPoint([{ x, y }], this.defaultLayers[i - 1] as colors)
+        this.drawPoint([{ x, y }], this.defaultLayers[i - 1] as colors, .8)
       })
     }
   }
