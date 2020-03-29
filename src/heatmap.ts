@@ -21,15 +21,12 @@ export interface HeatCircle {
   size: number
   color: color
   blurSize: string
+  shadowBlur?: number
 }
 
-type colors = 'darkBlue'|'lightBlue'|'green'|'yellow'|'red'
+type colors = 'curiousBlue'|'deYork'|'primrose'|'saharaSand'|'jaffa'|'valencia'|'red'
 export interface HeatCircles {
-  darkBlue?: HeatCircle
-  lightBlue?: HeatCircle
-  green?: HeatCircle
-  yellow?: HeatCircle
-  red?: HeatCircle
+  [key: string]: HeatCircle
 }
 
 export interface HeatmapOptions {
@@ -41,43 +38,57 @@ export interface HeatmapOptions {
 export interface DrawCircleOptions {
   color: string
   blurSize?: string
+  shadowBlur?: number
 }
 
 class Heatmap {
   protected readonly defaultBlurSize = '2px'
   protected readonly defaultSizes: Required<HeatCircles> = Object.freeze<Required<HeatCircles>>({
-    darkBlue: {
-      size: 26,
-      color: 100,
-      blurSize: '3px'
+    curiousBlue: {
+      size: 20,
+      color: 'rgba(39,141,190,.8)',
+      blurSize: '4px',
+      shadowBlur: 4
     },
-    lightBlue: {
-      size: 22,
-      color: 410,
-      blurSize: '1px'
+    deYork: {
+      size: 16,
+      color: 'rgba(121,202,164,.8)',
+      blurSize: '2px'
     },
-    green: {
-      size: 18,
-      color: 710,
-      blurSize: '1px'
+    primrose: {
+      size: 13,
+      color: 'rgba(208,236,156,.8)',
+      blurSize: '2px'
     },
-    yellow: {
-      size: 15,
-      color: 770,
-      blurSize: '3px'
+    saharaSand: {
+      size: 10,
+      color: 'rgba(245,232,144,.8)',
+      blurSize: '2px'
+    },
+    jaffa: {
+      size: 7,
+      color: 'rgba(246,133,74,.8)',
+      blurSize: '2px'
+    },
+    valencia: {
+      size: 4,
+      color: 'rgba(217,68,79,.8)',
+      blurSize: '2px'
     },
     red: {
-      size: 4,
-      color: 1020,
+      size: 1,
+      color: 'rgba(172,21,69,.8)',
       blurSize: '2px'
     }
   })
   protected readonly defaultLayers = [
     'red',
-    'yellow',
-    'green',
-    'lightBlue',
-    'darkBlue'
+    'valencia',
+    'jaffa',
+    'saharaSand',
+    'primrose',
+    'deYork',
+    'curiousBlue'
   ]
 
   protected data: HeatmapData[]
@@ -103,11 +114,14 @@ class Heatmap {
   }
 
   public drawHeatmap(
-    layers: number = 5
+    layers: number = 5,
+    reverse = false
   ) {
+    const layersLength = this.defaultLayers.length
     for (let i = layers; i > 0; i--) {
+      const layer = this.defaultLayers[reverse ? (i - 1) + (layersLength - layers) : i - 1] as colors
       this.data.forEach(({ x, y }) => {
-        this.drawPoint([{ x, y }], this.defaultLayers[i - 1] as colors, .8)
+        this.drawPoint({ x, y }, layer, .8)
       })
     }
   }
@@ -118,23 +132,26 @@ class Heatmap {
     radius: number,
     {
       color,
-      blurSize = this.defaultBlurSize
+      blurSize = this.defaultBlurSize,
+      shadowBlur = 0
     }: DrawCircleOptions
   ) {
     this.ctx.beginPath()
     this.ctx.fillStyle = color
     this.ctx.filter = `blur(${blurSize})`
+    this.ctx.shadowBlur = shadowBlur
+    this.ctx.shadowColor = '#191A2E'
     this.ctx.arc(x, y, radius, 0, 2 * Math.PI, false)
     this.ctx.fill()
     this.ctx.closePath()
   }
 
-  private drawPoint(data: HeatmapData[], colorName: colors, opacity = 1) {
-    const { size, color } = this.defaultSizes[colorName]
-    data.forEach(({ x, y }) => {
-      this.drawCircle(x, y, size, {
-        color: typeof color === 'string' ? color : calcRGB(color, opacity).rgba
-      })
+  private drawPoint({ x, y }: HeatmapData, colorName: colors, opacity = 1) {
+    const { size, color, blurSize, shadowBlur } = this.defaultSizes[colorName]
+    this.drawCircle(x, y, size, {
+      color: typeof color === 'string' ? color : calcRGB(color, opacity).rgba,
+      blurSize,
+      shadowBlur
     })
   }
 }
